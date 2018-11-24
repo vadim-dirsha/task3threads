@@ -19,4 +19,5 @@ package ru.vadimdirsha.java.model;
  * @date = 24.11.2018
  */
 public interface IOperator {
+    boolean isTakeCall();
 }
