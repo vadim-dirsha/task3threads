@@ -14,10 +14,18 @@
  */
 package ru.vadimdirsha.java.model;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public interface IOperator {
-    boolean isNotTakeCall();
+public class Organization implements IOrganization {
+    private static Logger logger = Logger.getLogger(Organization.class);
+    private boolean freeOperators;
+
+    @Override
+    public boolean isAnyOperatorFree() {
+        return freeOperators;
+    }
 }

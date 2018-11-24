@@ -14,10 +14,15 @@
  */
 package ru.vadimdirsha.java.model;
 
+import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.App;
+
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public interface IOperator {
-    boolean isNotTakeCall();
+public class Client implements IClient {
+    private static Logger logger = Logger.getLogger(Client.class);
+    private String name;
+    private int id;
 }

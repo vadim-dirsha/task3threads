@@ -14,10 +14,29 @@
  */
 package ru.vadimdirsha.java.model;
 
+import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.App;
+
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public interface IOperator {
-    boolean isNotTakeCall();
+public class Call implements ICall {
+    private static Logger logger = Logger.getLogger(Call.class);
+    private boolean active;
+    private int id;
+    private IClient client;
+
+    public IClient getClient() {
+        return client;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
+    }
 }

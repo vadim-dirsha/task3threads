@@ -19,5 +19,5 @@ package ru.vadimdirsha.java.model;
  * @date = 24.11.2018
  */
 public interface IClient {
-    boolean isCalling();
+    //boolean isCalling();
 }
