@@ -15,16 +15,28 @@
 package ru.vadimdirsha.java.model;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.App;
+
+import static ru.vadimdirsha.java.model.LoggerMesgConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
 
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public class CallCenter implements ICallCenter {
+public final class CallCenter implements ICallCenter {
+
     private static Logger logger = Logger.getLogger(CallCenter.class);
+
+    public static CallCenter getInstance() {
+        logger.info(String.format(SINGLETON_CLASS_NAME_CREATED_FORMAT, CallCenter.class.toString()));
+        return SingletonHolder.HOLDER_INSTANCE;
+    }
+
     @Override
     public boolean isCallQueueNotEmpty() {
         return false;
+    }
+
+    private static class SingletonHolder {
+        static final CallCenter HOLDER_INSTANCE = new CallCenter();
     }
 }
