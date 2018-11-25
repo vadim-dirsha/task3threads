@@ -16,6 +16,8 @@ public class App {
         коллцентр управляет очередью звонков, организация управялет операторами и коллценгтром
         reorganization(reorgProt) class reorganizationProtocol.BANKROT kappa
         */
+
+        //Condition.await/signal решит проблему
         Thread thread = new People("CrazyMan", 2000, 5000, false);
         thread.start();
         logger.info("main tread");

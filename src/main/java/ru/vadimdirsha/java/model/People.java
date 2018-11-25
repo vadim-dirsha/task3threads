@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 
 import java.util.Random;
 import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static ru.vadimdirsha.java.model.LoggerMessageConst.*;
 
@@ -28,13 +28,13 @@ import static ru.vadimdirsha.java.model.LoggerMessageConst.*;
  */
 public class People extends Thread implements IPeople {
     private static Logger logger = Logger.getLogger(People.class);
+    ReentrantLock lock = new ReentrantLock();
     private String name;
     private int delayBeforeCalling;
     private int waitForAnswer;
     private boolean randReCall;
     private boolean operatorAnswered = false;
     private boolean waitTimeOut = false;
-    ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public People(String name, int delayBeforeCalling, int waitForAnswer, boolean randReCall) {
         this.name = name;
@@ -71,7 +71,7 @@ public class People extends Thread implements IPeople {
                 callInOrganization();
                 logger.info(String.format(PEOPLE_CALLED_THE_ORGANIZATION, name));
                 Thread timeOut = new Thread(() -> {
-                    setName(name+" wait");
+
                     try {
                         sleep(waitForAnswer);
                     } catch (InterruptedException e) {
