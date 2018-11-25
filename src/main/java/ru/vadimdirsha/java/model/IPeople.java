@@ -16,8 +16,9 @@ package ru.vadimdirsha.java.model;
 
 /**
  * @author = Vadim Dirsha
- * @date = 24.11.2018
+ * @date = 25.11.2018
  */
-public class LoggerMesgConst {
-    public static final String SINGLETON_CLASS_NAME_CREATED_FORMAT = "Singleton %1$s created";
+public interface IPeople {
+    void callInOrganization();
+    void hungUp();
 }

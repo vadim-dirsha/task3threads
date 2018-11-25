@@ -14,15 +14,10 @@
  */
 package ru.vadimdirsha.java.model;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author = Vadim Dirsha
- * @date = 24.11.2018
+ * @date = 25.11.2018
  */
-public class Client implements IClient {
-    private static Logger logger = Logger.getLogger(Client.class);
-    private int id;
-    private IPeople people;
-
+public interface IHive {
+    IPeople createClient();
 }

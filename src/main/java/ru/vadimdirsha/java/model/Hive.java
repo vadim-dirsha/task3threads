@@ -16,13 +16,26 @@ package ru.vadimdirsha.java.model;
 
 import org.apache.log4j.Logger;
 
+import static ru.vadimdirsha.java.model.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
+
 /**
  * @author = Vadim Dirsha
- * @date = 24.11.2018
+ * @date = 25.11.2018
  */
-public class Client implements IClient {
-    private static Logger logger = Logger.getLogger(Client.class);
-    private int id;
-    private IPeople people;
+public final class Hive implements IHive {
+    private static Logger logger = Logger.getLogger(Hive.class);
 
+    public static Hive getInstance() {
+        logger.info(String.format(SINGLETON_CLASS_NAME_CREATED_FORMAT, Hive.class.toString()));
+        return Hive.SingletonHolder.HOLDER_INSTANCE;
+    }
+
+    public IPeople createClient() {
+        //TODO implementation
+        return null;
+    }
+
+    private static class SingletonHolder {
+        static final Hive HOLDER_INSTANCE = new Hive();
+    }
 }
