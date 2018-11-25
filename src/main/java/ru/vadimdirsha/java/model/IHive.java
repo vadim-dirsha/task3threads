@@ -19,4 +19,5 @@ package ru.vadimdirsha.java.model;
  * @date = 25.11.2018
  */
 public interface IHive {
+    IPeople createClient();
 }

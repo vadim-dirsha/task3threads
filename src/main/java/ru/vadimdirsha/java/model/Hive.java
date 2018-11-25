@@ -22,12 +22,17 @@ import static ru.vadimdirsha.java.model.LoggerMesgConst.SINGLETON_CLASS_NAME_CRE
  * @author = Vadim Dirsha
  * @date = 25.11.2018
  */
-public class Hive {
+public final class Hive implements IHive{
     private static Logger logger = Logger.getLogger(Hive.class);
 
     public static Hive getInstance() {
         logger.info(String.format(SINGLETON_CLASS_NAME_CREATED_FORMAT, Hive.class.toString()));
         return Hive.SingletonHolder.HOLDER_INSTANCE;
+    }
+
+    public IPeople createClient() {
+        //TODO implementation
+        return new People();
     }
 
     private static class SingletonHolder {
