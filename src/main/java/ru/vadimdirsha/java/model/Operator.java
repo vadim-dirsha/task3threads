@@ -15,7 +15,6 @@
 package ru.vadimdirsha.java.model;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.App;
 
 /**
  * @author = Vadim Dirsha

@@ -2,6 +2,7 @@ package ru.vadimdirsha.java;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.model.People;
 
 public class App {
     private static Logger logger = Logger.getLogger(App.class);
@@ -15,12 +16,7 @@ public class App {
         коллцентр управляет очередью звонков, организация управялет операторами и коллценгтром
         reorganization(reorgProt) class reorganizationProtocol.BANKROT kappa
         */
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                logger.info("new tread");
-            }
-        });
+        Thread thread = new People("CrazyMan", 2000, 5000, false);
         thread.start();
         logger.info("main tread");
     }

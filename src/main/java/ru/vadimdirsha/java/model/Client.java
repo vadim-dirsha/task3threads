@@ -15,7 +15,6 @@
 package ru.vadimdirsha.java.model;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.App;
 
 /**
  * @author = Vadim Dirsha
@@ -23,7 +22,7 @@ import ru.vadimdirsha.java.App;
  */
 public class Client implements IClient {
     private static Logger logger = Logger.getLogger(Client.class);
-    private String name;
     private int id;
+    private IPeople people;
 
 }

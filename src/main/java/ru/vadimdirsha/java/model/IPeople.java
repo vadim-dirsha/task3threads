@@ -19,7 +19,6 @@ package ru.vadimdirsha.java.model;
  * @date = 25.11.2018
  */
 public interface IPeople {
-    void takePhone();
-
-    boolean callInOrganization();
+    void callInOrganization();
+    void hungUp();
 }

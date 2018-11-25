@@ -16,7 +16,7 @@ package ru.vadimdirsha.java.model;
 
 import org.apache.log4j.Logger;
 
-import static ru.vadimdirsha.java.model.LoggerMesgConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
+import static ru.vadimdirsha.java.model.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
 
 /**
  * @author = Vadim Dirsha

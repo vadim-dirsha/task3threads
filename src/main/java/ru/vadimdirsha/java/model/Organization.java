@@ -16,13 +16,13 @@ package ru.vadimdirsha.java.model;
 
 import org.apache.log4j.Logger;
 
-import static ru.vadimdirsha.java.model.LoggerMesgConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
+import static ru.vadimdirsha.java.model.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
 
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public class Organization implements IOrganization {
+public final class Organization implements IOrganization {
     private static Logger logger = Logger.getLogger(Organization.class);
     private boolean freeOperators;
 
