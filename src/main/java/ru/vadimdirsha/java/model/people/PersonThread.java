@@ -17,6 +17,7 @@ package ru.vadimdirsha.java.model.people;
 import org.apache.log4j.Logger;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -29,58 +30,55 @@ import static ru.vadimdirsha.java.consts.LoggerMessageConst.*;
 public class PersonThread extends Thread {
     private static Logger logger = Logger.getLogger(PersonThread.class);
     private ReentrantLock lock = new ReentrantLock();
-    private Condition condition = lock.newCondition();
-    private Person people;
+    private Condition conditionWaitSignal = lock.newCondition();
+    private Condition replaceSleep = lock.newCondition();
+    private boolean isSomeObscureHappened = true;
+    private Person person;
 
-    public PersonThread(Person people) {
+    public PersonThread(Person person) {
         super();
-        this.people = people;
+        this.person = person;
     }
 
-    public Person getPeople() {
-        return people;
+    public Person getPerson() {
+        return person;
     }
 
-    public Condition getCondition() {
-        return condition;
+    public Condition getConditionWaitSignal() {
+        return conditionWaitSignal;
     }
 
     public ReentrantLock getLock() {
         return lock;
     }
 
-    public void callInOrganization() {
+    private void callInOrganization() {
+        logger.info(String.format(PEOPLE_CALLED_THE_ORGANIZATION, person.getName()));
         //TODO implementation
     }
 
-    public void hungUp() {
+    private void hungUp() {
+        logger.info(String.format(PEOPLE_FINISH_CALL, person.getName()));
         //TODO implementation
     }
 
     @Override
     public void run() {
-        setName(people.getName());
-        while (!people.isTimeOut()) {
-            if (!isInterrupted()) {
-                waitDelayBeforeCalling();
-            }
+        setName(person.getName());
+        while (!person.isTimeOut() && !isInterrupted()) {
+            waitDelayBeforeCalling();
 
-            if (!isInterrupted()) {
-                logger.info(String.format(PEOPLE_CALLED_THE_ORGANIZATION, people.getName()));
-                callInOrganization();
-                waitOperator();
-            }
+            callInOrganization();
 
-            if (!isInterrupted() && !people.isTimeOut() && people.isOperatorAnswered()) {
+            waitOperator();
+
+            if (!person.isTimeOut() && person.isOperatorAnswered()) {
                 communicateWithOperator();
             }
 
-            if (!isInterrupted()) {
-                logger.info(String.format(PEOPLE_FINISH_CALL, people.getName()));
-                hungUp();
-            }
+            hungUp();
 
-            if (!isInterrupted() && people.isTimeOut() && people.isReCall()) {
+            if (person.isTimeOut() && person.isReCall()) {
                 reCallInitiate();
             }
         }
@@ -88,25 +86,25 @@ public class PersonThread extends Thread {
     }
 
     private void reCallInitiate() {
-        logger.info(String.format(PEOPLE_RE_CALL, people.getName()));
-        people.setTimeOut(false);
-        people.setReCall(false);
-        people.setWaitOperator(new Random().nextInt(people.getWaitOperator()) + people.getWaitOperator());
-        people.setOperatorAnswered(false);
+        logger.info(String.format(PEOPLE_RE_CALL, person.getName()));
+        person.setTimeOut(false);
+        person.setReCall(false);
+        person.setWaitOperator(new Random().nextInt(person.getWaitOperator()) + person.getWaitOperator());
+        person.setOperatorAnswered(false);
     }
 
     private void communicateWithOperator() {
-        people.setTimeOut(true);
-        logger.info(String.format(PEOPLE_COMMUNICATE_WITH_OPERATOR, people.getName()));
-        while (people.isOperatorAnswered()) {
+        person.setTimeOut(true);
+        logger.info(String.format(PEOPLE_COMMUNICATE_WITH_OPERATOR, person.getName()));
+        while (person.isOperatorAnswered()) {
             try {
-                condition.await();
+                conditionWaitSignal.await();
             } catch (InterruptedException e) {
                 logger.error(e.getMessage(), e);
                 interrupt();
             }
         }
-        logger.info(String.format(PEOPLE_FINISH_COMMUNICATE_WITH_OPERATOR, people.getName()));
+        logger.info(String.format(PEOPLE_FINISH_COMMUNICATE_WITH_OPERATOR, person.getName()));
     }
 
     private void waitOperator() {
@@ -115,8 +113,8 @@ public class PersonThread extends Thread {
 
         lock.lock();
         try {
-            while (!people.isOperatorAnswered() && !people.isTimeOut()) {
-                condition.await();
+            while (!person.isOperatorAnswered() && !person.isTimeOut()) {
+                conditionWaitSignal.await();
             }
         } catch (InterruptedException e) {
             logger.error(e.getMessage(), e);
@@ -127,12 +125,21 @@ public class PersonThread extends Thread {
     }
 
     private void waitDelayBeforeCalling() {
+        logger.info(String.format(PEOPLE_WILL_CALL_THE_ORGANIZATION_THROUGH_MILS, person.getName(), person.getDelayCalling()));
         try {
-            logger.info(String.format(PEOPLE_WILL_CALL_THE_ORGANIZATION_THROUGH_MILS, people.getName(), people.getDelayCalling()));
-            sleep(people.getDelayCalling());
+            lock.lock();
+            while (isSomeObscureHappened) {
+                if (replaceSleep.await(person.getDelayCalling(), TimeUnit.MILLISECONDS)) {
+                    isSomeObscureHappened = true;
+                } else {
+                    throw new InterruptedException();
+                }
+            }
         } catch (InterruptedException e) {
             logger.error(e.getMessage(), e);
             interrupt();
+        } finally {
+            lock.unlock();
         }
     }
 }

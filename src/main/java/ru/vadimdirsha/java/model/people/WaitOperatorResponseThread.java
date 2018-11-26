@@ -32,13 +32,14 @@ public class WaitOperatorResponseThread extends Thread {
         this.peopleThread = peopleThread;
     }
 
+
     @Override
     public void run() {
         this.setName(peopleThread.getName() + "Wait");
 
-        logger.info(String.format(PEOPLE_WAITING_A_RESPONSE_FROM_THE_OPERATOR_MILS, peopleThread.getName(), peopleThread.getPeople().getWaitOperator()));
+        logger.info(String.format(PEOPLE_WAITING_A_RESPONSE_FROM_THE_OPERATOR_MILS, peopleThread.getName(), peopleThread.getPerson().getWaitOperator()));
         try {
-            sleep(peopleThread.getPeople().getWaitOperator());
+            sleep(peopleThread.getPerson().getWaitOperator());
         } catch (InterruptedException e) {
             logger.error(e.getMessage(), e);
             interrupt();
@@ -46,9 +47,9 @@ public class WaitOperatorResponseThread extends Thread {
         if (!isInterrupted()) {
             peopleThread.getLock().lock();
             try {
-                peopleThread.getPeople().setTimeOut(true);
+                peopleThread.getPerson().setTimeOut(true);
                 logger.info(String.format(PEOPLE_DIDN_T_WAIT_OPERATOR_RESPONSE, peopleThread.getName()));
-                peopleThread.getCondition().signal();
+                peopleThread.getConditionWaitSignal().signal();
             } finally {
                 peopleThread.getLock().unlock();
             }

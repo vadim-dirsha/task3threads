@@ -15,6 +15,9 @@
 package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.model.organization.operators.Operator;
+
+import java.util.List;
 
 import static ru.vadimdirsha.java.consts.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
 
@@ -22,10 +25,10 @@ import static ru.vadimdirsha.java.consts.LoggerMessageConst.SINGLETON_CLASS_NAME
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public final class Organization implements IOrganization {
+public final class Organization {
     private static Logger logger = Logger.getLogger(Organization.class);
-    private boolean freeOperators;
-    CallCenter callCenter;
+    private List<Operator> operators;
+    private CallCenter callCenter;
 
 
     public static Organization getInstance() {
@@ -33,10 +36,6 @@ public final class Organization implements IOrganization {
         return Organization.SingletonHolder.HOLDER_INSTANCE;
     }
 
-    @Override
-    public boolean isAnyOperatorFree() {
-        return freeOperators;
-    }
 
     private static class SingletonHolder {
         static final Organization HOLDER_INSTANCE = new Organization();
