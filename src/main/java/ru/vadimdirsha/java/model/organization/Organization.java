@@ -41,13 +41,4 @@ public final class Organization implements IOrganization {
     private static class SingletonHolder {
         static final Organization HOLDER_INSTANCE = new Organization();
     }
-
-    /**
-     * @author = Vadim Dirsha
-     * @date = 25.11.2018
-     */
-    public static interface IPeople {
-        void callInOrganization();
-        void hungUp();
-    }
 }

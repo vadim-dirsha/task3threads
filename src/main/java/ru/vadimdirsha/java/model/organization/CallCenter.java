@@ -15,6 +15,10 @@
 package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.model.organization.operators.OperatorThread;
+
+import java.util.List;
+import java.util.Queue;
 
 import static ru.vadimdirsha.java.consts.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
 
@@ -25,6 +29,8 @@ import static ru.vadimdirsha.java.consts.LoggerMessageConst.SINGLETON_CLASS_NAME
 public final class CallCenter implements ICallCenter {
 
     private static Logger logger = Logger.getLogger(CallCenter.class);
+    private List<OperatorThread> operators;
+    private Queue<Call> calls;
 
     public static CallCenter getInstance() {
         logger.info(String.format(SINGLETON_CLASS_NAME_CREATED_FORMAT, CallCenter.class.toString()));
