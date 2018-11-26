@@ -12,12 +12,12 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model;
+package ru.vadimdirsha.java.model.organization;
 
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public interface ICall {
-    boolean isActive();
+public interface IOrganization {
+    boolean isAnyOperatorFree();
 }

@@ -12,12 +12,21 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model;
+package ru.vadimdirsha.java.model.organization.operators;
+
+import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.model.organization.IOperator;
 
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public interface ICallCenter {
-    boolean isCallQueueNotEmpty();
+public class Operator implements IOperator {
+    private static Logger logger = Logger.getLogger(Operator.class);
+    private boolean free;
+
+    @Override
+    public boolean isNotTakeCall() {
+        return free;
+    }
 }

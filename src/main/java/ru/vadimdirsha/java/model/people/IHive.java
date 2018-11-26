@@ -12,13 +12,14 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model;
+package ru.vadimdirsha.java.model.people;
+
+import ru.vadimdirsha.java.model.organization.Organization;
 
 /**
  * @author = Vadim Dirsha
  * @date = 25.11.2018
  */
-public interface IPeople {
-    void callInOrganization();
-    void hungUp();
+public interface IHive {
+    Organization.IPeople createClient();
 }

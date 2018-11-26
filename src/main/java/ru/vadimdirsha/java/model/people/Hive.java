@@ -12,11 +12,12 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model;
+package ru.vadimdirsha.java.model.people;
 
 import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.model.organization.Organization;
 
-import static ru.vadimdirsha.java.model.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
+import static ru.vadimdirsha.java.consts.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
 
 /**
  * @author = Vadim Dirsha
@@ -30,7 +31,7 @@ public final class Hive implements IHive {
         return Hive.SingletonHolder.HOLDER_INSTANCE;
     }
 
-    public IPeople createClient() {
+    public Organization.IPeople createClient() {
         //TODO implementation
         return null;
     }
