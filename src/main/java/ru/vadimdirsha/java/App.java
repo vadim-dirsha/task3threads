@@ -1,8 +1,8 @@
 package ru.vadimdirsha.java;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.model.People;
+import ru.vadimdirsha.java.model.people.Person;
+import ru.vadimdirsha.java.model.people.PersonThread;
 
 public class App {
     private static Logger logger = Logger.getLogger(App.class);
@@ -18,7 +18,7 @@ public class App {
         */
 
         //Condition.await/signal решит проблему
-        Thread thread = new People("CrazyMan", 2000, 5000, false);
+        Thread thread = new PersonThread(new Person("CrazyMan", 2000, 5000, false));
         thread.start();
         logger.info("main tread");
     }

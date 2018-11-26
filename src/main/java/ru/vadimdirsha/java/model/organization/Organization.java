@@ -12,11 +12,11 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model;
+package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
 
-import static ru.vadimdirsha.java.model.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
+import static ru.vadimdirsha.java.consts.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
 
 /**
  * @author = Vadim Dirsha
@@ -25,6 +25,8 @@ import static ru.vadimdirsha.java.model.LoggerMessageConst.SINGLETON_CLASS_NAME_
 public final class Organization implements IOrganization {
     private static Logger logger = Logger.getLogger(Organization.class);
     private boolean freeOperators;
+    CallCenter callCenter;
+
 
     public static Organization getInstance() {
         logger.info(String.format(SINGLETON_CLASS_NAME_CREATED_FORMAT, Organization.class.toString()));
@@ -38,5 +40,14 @@ public final class Organization implements IOrganization {
 
     private static class SingletonHolder {
         static final Organization HOLDER_INSTANCE = new Organization();
+    }
+
+    /**
+     * @author = Vadim Dirsha
+     * @date = 25.11.2018
+     */
+    public static interface IPeople {
+        void callInOrganization();
+        void hungUp();
     }
 }

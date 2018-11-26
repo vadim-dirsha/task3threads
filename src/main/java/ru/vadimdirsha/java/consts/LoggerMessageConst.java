@@ -12,7 +12,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model;
+package ru.vadimdirsha.java.consts;
 
 /**
  * @author = Vadim Dirsha
@@ -27,6 +27,7 @@ public final class LoggerMessageConst {
     public static final String PEOPLE_FINISH_COMMUNICATE_WITH_OPERATOR = "%1$s finish communicate with operator.";
     public static final String PEOPLE_RE_CALL = "%1$s reCall.";
     public static final String PEOPLE_FINISH_CALL = "%1$s finish call.";
+    public static final String PEOPLE_DIDN_T_WAIT_OPERATOR_RESPONSE = "%1$s didn't wait operator response.";
 
     private LoggerMessageConst() {
     }
