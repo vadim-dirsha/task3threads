@@ -15,41 +15,47 @@
 package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.model.organization.operators.OperatorThread;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-import static ru.vadimdirsha.java.consts.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
+import static ru.vadimdirsha.java.consts.LoggerMessageConst.CALL_ADDED_IN_CALL_QUEUE_RESULT_ID_NAME;
 
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public final class CallCenter implements ICallCenter {
-
+public class CallCenter {
     private static Logger logger = Logger.getLogger(CallCenter.class);
-    private List<OperatorThread> operators;
+    private Manager manager;
     private Queue<Call> calls;
+    private int callCounter;
+    private Lock lock = new ReentrantLock();
 
-    public CallCenter() {
-        this.operators = new LinkedList<>();
+    public CallCenter(Manager manager) {
         this.calls = new ConcurrentLinkedQueue<>();
+        this.manager = manager;
     }
 
-    public static CallCenter getInstance() {
-        logger.info(String.format(SINGLETON_CLASS_NAME_CREATED_FORMAT, CallCenter.class.toString()));
-        return SingletonHolder.HOLDER_INSTANCE;
+    public boolean isQueueEmpty() {
+        return calls.isEmpty();
     }
 
-    @Override
-    public boolean isCallQueueNotEmpty() {
-        return false;
+    public boolean clientAddInQueue(Client e) {
+        boolean result = calls.add(new Call(callCounter++, e));
+        logger.info(String.format(CALL_ADDED_IN_CALL_QUEUE_RESULT_ID_NAME, result, callCounter - 1, e.getPersonThread().getPerson().getName()));
+        manager.getLock().lock();
+        try {
+            manager.getCondition().signal();
+        } finally {
+            manager.getLock().unlock();
+        }
+        return result;
     }
 
-    private static class SingletonHolder {
-        static final CallCenter HOLDER_INSTANCE = new CallCenter();
+    public Queue<Call> getCalls() {
+        return calls;
     }
 }

@@ -20,13 +20,18 @@ import org.apache.log4j.Logger;
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public class Call implements ICall {
+public class Call {
     private static Logger logger = Logger.getLogger(Call.class);
-    private boolean active;
+    private boolean isActive = true;
     private int id;
-    private IClient client;
+    private Client client;
 
-    public IClient getClient() {
+    public Call(int id, Client client) {
+        this.id = id;
+        this.client = client;
+    }
+
+    public Client getClient() {
         return client;
     }
 
@@ -34,8 +39,7 @@ public class Call implements ICall {
         return id;
     }
 
-    @Override
     public boolean isActive() {
-        return active;
+        return isActive;
     }
 }

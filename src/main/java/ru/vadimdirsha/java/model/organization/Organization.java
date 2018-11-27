@@ -15,9 +15,7 @@
 package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.model.organization.operators.Operator;
-
-import java.util.List;
+import ru.vadimdirsha.java.model.people.PersonThread;
 
 import static ru.vadimdirsha.java.consts.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
 
@@ -27,17 +25,32 @@ import static ru.vadimdirsha.java.consts.LoggerMessageConst.SINGLETON_CLASS_NAME
  */
 public final class Organization {
     private static Logger logger = Logger.getLogger(Organization.class);
-    private List<Operator> operators;
+    private int clientCounter = 0;
     private CallCenter callCenter;
+    private Manager manager;
 
+    public void setManager(Manager manager) {
+        this.manager = manager;
+        callCenter = new CallCenter(manager);
+    }
 
     public static Organization getInstance() {
-        logger.info(String.format(SINGLETON_CLASS_NAME_CREATED_FORMAT, Organization.class.toString()));
         return Organization.SingletonHolder.HOLDER_INSTANCE;
     }
 
+    public CallCenter getCallCenter() {
+        return callCenter;
+    }
+
+    public boolean callUp(PersonThread e) {
+        return callCenter.clientAddInQueue(new Client(clientCounter++, e));
+    }
 
     private static class SingletonHolder {
         static final Organization HOLDER_INSTANCE = new Organization();
+    }
+
+    public void startWork(){
+        manager.start();
     }
 }

@@ -12,43 +12,45 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model.organization.operators;
+package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.model.organization.Call;
-import ru.vadimdirsha.java.model.organization.Client;
-import ru.vadimdirsha.java.model.organization.OperatorsRoom;
 
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author = Vadim Dirsha
- * @date = 26.11.2018
+ * @date = 27.11.2018
  */
-public class OperatorThread extends Thread {
-    private static Logger logger = Logger.getLogger(Client.class);
-    OperatorsRoom operatorsRoom;
-    private Operator operator;
-    private Call call;
+public class Manager extends Thread {
+    private static Logger logger = Logger.getLogger(Manager.class);
+    private OperatorsRoom operatorsRoom;
+    private CallCenter callCenter;
     private Lock lock = new ReentrantLock();
-
-    public OperatorThread(Call call, Operator operator, OperatorsRoom operatorsRoom) {
+    private Condition condition = lock.newCondition();
+    public Manager(OperatorsRoom operatorsRoom, CallCenter callCenter) {
         super();
-        this.call = call;
-        this.operator = operator;
         this.operatorsRoom = operatorsRoom;
+        this.callCenter = callCenter;
+    }
+
+    public Lock getLock() {
+        return lock;
+    }
+
+    public Condition getCondition() {
+        return condition;
     }
 
     @Override
     public void run() {
         while (!isInterrupted()) {
-            call.getClient().getPerson().setOperatorAnswered(true);
-            call.getClient().getPersonThread().getConditionCommunicate().signal();
-            while (call.getClient().getPerson().isOperatorAnswered()) {
+            while (callCenter.isQueueEmpty() && !operatorsRoom.isSameOperatorFree()) {
                 lock.lock();
                 try {
-                    call.getClient().getPersonThread().getConditionCommunicate().await();
+                    condition.await();
                 } catch (InterruptedException e) {
                     logger.error(e.getMessage(), e);
                     interrupt();
@@ -56,8 +58,12 @@ public class OperatorThread extends Thread {
                     lock.unlock();
                 }
             }
-            operatorsRoom.addFreeOperator(operator);
-            interrupt();
+            createTask();
         }
+    }
+
+    private void createTask() {
+
+        operatorsRoom.createTask(callCenter.getCalls().poll());
     }
 }

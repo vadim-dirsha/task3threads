@@ -15,6 +15,7 @@
 package ru.vadimdirsha.java.model.people;
 
 import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.model.organization.Organization;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +33,7 @@ public class PersonThread extends Thread {
     private ReentrantLock lock = new ReentrantLock();
     private Condition conditionWaitSignal = lock.newCondition();
     private Condition replaceSleep = lock.newCondition();
+    private Condition conditionCommunicate = lock.newCondition();
     private boolean isSomeObscureHappened = true;
     private Person person;
 
@@ -54,7 +56,9 @@ public class PersonThread extends Thread {
 
     private void callInOrganization() {
         logger.info(String.format(PEOPLE_CALLED_THE_ORGANIZATION, person.getName()));
-        //TODO implementation
+        if (!Organization.getInstance().callUp(this)) {
+            interrupt();
+        }
     }
 
     private void hungUp() {
@@ -93,28 +97,41 @@ public class PersonThread extends Thread {
         person.setOperatorAnswered(false);
     }
 
+    public Condition getConditionCommunicate() {
+        return conditionCommunicate;
+    }
+
     private void communicateWithOperator() {
         person.setTimeOut(true);
         logger.info(String.format(PEOPLE_COMMUNICATE_WITH_OPERATOR, person.getName()));
         while (person.isOperatorAnswered()) {
+            lock.lock();
             try {
-                conditionWaitSignal.await();
+                if (conditionCommunicate.await(person.getCommunicationTime(), TimeUnit.MILLISECONDS)) {
+                    throw new InterruptedException();
+                } else {
+                    person.setOperatorAnswered(false);
+                    conditionCommunicate.signal();
+                }
             } catch (InterruptedException e) {
                 logger.error(e.getMessage(), e);
                 interrupt();
+            } finally {
+                lock.unlock();
             }
         }
         logger.info(String.format(PEOPLE_FINISH_COMMUNICATE_WITH_OPERATOR, person.getName()));
     }
 
     private void waitOperator() {
-        Thread timeOut = new WaitOperatorResponseThread(this);
-        timeOut.start();
-
+        logger.info(String.format(PEOPLE_WAITING_A_RESPONSE_FROM_THE_OPERATOR_MILS, person.getName(), person.getWaitOperator()));
         lock.lock();
         try {
             while (!person.isOperatorAnswered() && !person.isTimeOut()) {
-                conditionWaitSignal.await();
+                if (!conditionWaitSignal.await(person.getWaitOperator(), TimeUnit.MILLISECONDS)) {
+                    person.setTimeOut(true);
+                    logger.info(String.format(PEOPLE_STOPPED_WAITING_OPERATOR_RESPONSE, person.getName()));
+                }
             }
         } catch (InterruptedException e) {
             logger.error(e.getMessage(), e);
@@ -130,9 +147,9 @@ public class PersonThread extends Thread {
             lock.lock();
             while (isSomeObscureHappened) {
                 if (replaceSleep.await(person.getDelayCalling(), TimeUnit.MILLISECONDS)) {
-                    isSomeObscureHappened = true;
-                } else {
                     throw new InterruptedException();
+                } else {
+                    isSomeObscureHappened = false;
                 }
             }
         } catch (InterruptedException e) {

@@ -15,18 +15,22 @@
 package ru.vadimdirsha.java.model.organization.operators;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.model.organization.IOperator;
 
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public class Operator implements IOperator {
+public class Operator {
     private static Logger logger = Logger.getLogger(Operator.class);
-    private boolean free;
+    private int id;
+    private String Name;
 
-    @Override
-    public boolean isNotTakeCall() {
-        return free;
+    public String getName() {
+        return Name;
+    }
+
+    public Operator(int id, String name) {
+        this.id = id;
+        Name = name;
     }
 }
