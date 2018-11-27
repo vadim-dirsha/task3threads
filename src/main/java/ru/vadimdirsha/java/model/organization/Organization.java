@@ -17,8 +17,6 @@ package ru.vadimdirsha.java.model.organization;
 import org.apache.log4j.Logger;
 import ru.vadimdirsha.java.model.people.PersonThread;
 
-import static ru.vadimdirsha.java.consts.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
-
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
@@ -28,14 +26,24 @@ public final class Organization {
     private int clientCounter = 0;
     private CallCenter callCenter;
     private Manager manager;
-
-    public void setManager(Manager manager) {
-        this.manager = manager;
-        callCenter = new CallCenter(manager);
-    }
+    private OperatorsRoom operatorsRoom;
 
     public static Organization getInstance() {
         return Organization.SingletonHolder.HOLDER_INSTANCE;
+    }
+
+    public void setUp() {
+        this.manager = new Manager();
+        this.callCenter = new CallCenter();
+        this.operatorsRoom = new OperatorsRoom();
+    }
+
+    public Manager getManager() {
+        return manager;
+    }
+
+    public OperatorsRoom getOperatorsRoom() {
+        return operatorsRoom;
     }
 
     public CallCenter getCallCenter() {
@@ -43,14 +51,15 @@ public final class Organization {
     }
 
     public boolean callUp(PersonThread e) {
-        return callCenter.clientAddInQueue(new Client(clientCounter++, e));
+        boolean result = callCenter.clientAddInQueue(new Client(clientCounter++, e));
+        return result;
+    }
+
+    public void startWork() {
+        manager.start();
     }
 
     private static class SingletonHolder {
         static final Organization HOLDER_INSTANCE = new Organization();
-    }
-
-    public void startWork(){
-        manager.start();
     }
 }

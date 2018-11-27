@@ -42,18 +42,21 @@ public class OperatorThread extends Thread {
 
     @Override
     public void run() {
+        setName(operator.getName()+"Thread");
         while (!isInterrupted()) {
+            call.getClient().getPersonThread().getLock().lock();
             call.getClient().getPerson().setOperatorAnswered(true);
-            call.getClient().getPersonThread().getConditionCommunicate().signal();
+            logger.info(String.format("Operator %1$s answered %2$s", operator.getName(), call.getClient().getPerson().getName()));
+            call.getClient().getPersonThread().getConditionWaitSignal().signal();
             while (call.getClient().getPerson().isOperatorAnswered()) {
-                lock.lock();
+
                 try {
                     call.getClient().getPersonThread().getConditionCommunicate().await();
                 } catch (InterruptedException e) {
                     logger.error(e.getMessage(), e);
                     interrupt();
                 } finally {
-                    lock.unlock();
+                    call.getClient().getPersonThread().getLock().unlock();
                 }
             }
             operatorsRoom.addFreeOperator(operator);

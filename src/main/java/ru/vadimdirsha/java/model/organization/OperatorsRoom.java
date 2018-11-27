@@ -29,12 +29,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class OperatorsRoom {
     private static Logger logger = Logger.getLogger(OperatorsRoom.class);
+    private Organization organization = Organization.getInstance();
     private Queue<Operator> freeOperators = new ConcurrentLinkedQueue<>();
     private List<OperatorThread> tasks = new ArrayList<>();
-
-    public OperatorsRoom(List<Operator> operators) {
-        freeOperators.addAll(operators);
-    }
 
     public boolean isSameOperatorFree() {
         return !freeOperators.isEmpty();
@@ -42,11 +39,18 @@ public class OperatorsRoom {
 
     public void addFreeOperator(Operator e) {
         freeOperators.add(e);
+
+        Manager manager = organization.getManager();
+        manager.getLock().lock();
+        try {
+            manager.getCondition().signal();
+        } finally {
+            manager.getLock().unlock();
+        }
     }
 
     public void createTask(Call call) {
         if (!freeOperators.isEmpty()) {
-            logger.info(String.format("Operator %1$s answered %2$s", freeOperators.peek().getName(), call.getClient().getPerson().getName()));
             OperatorThread thread = new OperatorThread(call, freeOperators.poll(), this);
             tasks.add(thread);
             thread.start();
