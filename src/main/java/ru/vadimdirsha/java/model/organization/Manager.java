@@ -26,15 +26,9 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class Manager extends Thread {
     private static Logger logger = Logger.getLogger(Manager.class);
-    private OperatorsRoom operatorsRoom;
-    private CallCenter callCenter;
+    private Organization organization = Organization.getInstance();
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
-    public Manager(OperatorsRoom operatorsRoom, CallCenter callCenter) {
-        super();
-        this.operatorsRoom = operatorsRoom;
-        this.callCenter = callCenter;
-    }
 
     public Lock getLock() {
         return lock;
@@ -46,8 +40,11 @@ public class Manager extends Thread {
 
     @Override
     public void run() {
+        setName("Manager");
+        OperatorsRoom operatorsRoom = organization.getOperatorsRoom();
+        CallCenter callCenter = organization.getCallCenter();
         while (!isInterrupted()) {
-            while (callCenter.isQueueEmpty() && !operatorsRoom.isSameOperatorFree()) {
+            while (callCenter.isQueueEmpty() || !operatorsRoom.isSameOperatorFree()) {
                 lock.lock();
                 try {
                     condition.await();
@@ -63,7 +60,6 @@ public class Manager extends Thread {
     }
 
     private void createTask() {
-
-        operatorsRoom.createTask(callCenter.getCalls().poll());
+        organization.getOperatorsRoom().createTask(organization.getCallCenter().getCalls().poll());
     }
 }

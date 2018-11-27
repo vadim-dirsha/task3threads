@@ -76,7 +76,7 @@ public class PersonThread extends Thread {
 
             waitOperator();
 
-            if (!person.isTimeOut() && person.isOperatorAnswered()) {
+            if (person.isOperatorAnswered()) {
                 communicateWithOperator();
             }
 
