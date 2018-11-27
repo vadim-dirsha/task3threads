@@ -1,8 +1,6 @@
 package ru.vadimdirsha.java;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.model.organization.Manager;
-import ru.vadimdirsha.java.model.organization.OperatorsRoom;
 import ru.vadimdirsha.java.model.organization.Organization;
 import ru.vadimdirsha.java.model.organization.operators.Operator;
 import ru.vadimdirsha.java.model.people.Person;
@@ -33,20 +31,19 @@ public class App {
         }
         ArrayList<Person> people = new ArrayList<>();
         Random random = new Random(new Date().getTime());
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 25; i++) {
             people.add(new Person("Man" + i, random.nextInt(2000), random.nextInt(30000), random.nextInt(12000), false));
         }
 
-        OperatorsRoom operatorsRoom = new OperatorsRoom(operators);
-
         Organization organization = Organization.getInstance();
-        organization.setManager(new Manager(operatorsRoom, organization.getCallCenter()));
+        organization.setUp();
         LinkedList<Thread> threads = new LinkedList<>();
         for (int i = 0; i < 1; i++) {
             Thread thread = new PersonThread(new Person("CrazyMan" + i, 2000 + i * 10, 5000, false));
             threads.add(thread);
         }
-        //people.forEach(e -> threads.add(new PersonThread(e)));
+        people.forEach(e -> threads.add(new PersonThread(e)));
+        operators.forEach(e -> organization.getOperatorsRoom().addFreeOperator(e));
         organization.startWork();
         threads.forEach(Thread::start);
         logger.info("main tread");
