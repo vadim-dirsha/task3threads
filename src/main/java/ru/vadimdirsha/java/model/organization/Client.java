@@ -15,14 +15,37 @@
 package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.model.people.Person;
+import ru.vadimdirsha.java.model.people.PersonThread;
 
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public class Client implements IClient {
+public class Client {
     private static Logger logger = Logger.getLogger(Client.class);
     private int id;
-    private Organization.IPeople people;
+    private Person person;
+    private PersonThread personThread;
+
+    public Client(int id, Person person, PersonThread personThread) {
+        this.id = id;
+        this.person = person;
+        this.personThread = personThread;
+    }
+
+    public Client(int id, PersonThread personThread) {
+        this.id = id;
+        this.personThread = personThread;
+        this.person = personThread.getPerson();
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public PersonThread getPersonThread() {
+        return personThread;
+    }
 
 }

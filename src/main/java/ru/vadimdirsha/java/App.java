@@ -1,14 +1,23 @@
 package ru.vadimdirsha.java;
 
 import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.model.organization.Manager;
+import ru.vadimdirsha.java.model.organization.OperatorsRoom;
+import ru.vadimdirsha.java.model.organization.Organization;
+import ru.vadimdirsha.java.model.organization.operators.Operator;
 import ru.vadimdirsha.java.model.people.Person;
 import ru.vadimdirsha.java.model.people.PersonThread;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Random;
 
 public class App {
     private static Logger logger = Logger.getLogger(App.class);
 
     public static void main(String[] args) {
-        //ide does not copy log4j.properties to classes folder (classpath)
+        //ide doesn't copy log4j.properties to classes folder (classpath)
         //BasicConfigurator.configure();
         /*
         TODO предварительно, клиент и коллцентр потоки которые управляют звонками, оператор и коллцентор части организации,
@@ -16,10 +25,30 @@ public class App {
         коллцентр управляет очередью звонков, организация управялет операторами и коллценгтром
         reorganization(reorgProt) class reorganizationProtocol.BANKROT kappa
         */
-
         //Condition.await/signal решит проблему
-        Thread thread = new PersonThread(new Person("CrazyMan", 2000, 5000, false));
-        thread.start();
+
+        ArrayList<Operator> operators = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            operators.add(new Operator(i, "Operator" + i));
+        }
+        ArrayList<Person> people = new ArrayList<>();
+        Random random = new Random(new Date().getTime());
+        for (int i = 0; i < 5; i++) {
+            people.add(new Person("Man" + i, random.nextInt(2000), random.nextInt(30000), random.nextInt(12000), false));
+        }
+
+        OperatorsRoom operatorsRoom = new OperatorsRoom(operators);
+
+        Organization organization = Organization.getInstance();
+        organization.setManager(new Manager(operatorsRoom, organization.getCallCenter()));
+        LinkedList<Thread> threads = new LinkedList<>();
+        for (int i = 0; i < 1; i++) {
+            Thread thread = new PersonThread(new Person("CrazyMan" + i, 2000 + i * 10, 5000, false));
+            threads.add(thread);
+        }
+        //people.forEach(e -> threads.add(new PersonThread(e)));
+        organization.startWork();
+        threads.forEach(Thread::start);
         logger.info("main tread");
     }
 }

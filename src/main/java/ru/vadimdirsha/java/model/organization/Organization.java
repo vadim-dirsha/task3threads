@@ -15,6 +15,7 @@
 package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.model.people.PersonThread;
 
 import static ru.vadimdirsha.java.consts.LoggerMessageConst.SINGLETON_CLASS_NAME_CREATED_FORMAT;
 
@@ -22,32 +23,34 @@ import static ru.vadimdirsha.java.consts.LoggerMessageConst.SINGLETON_CLASS_NAME
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public final class Organization implements IOrganization {
+public final class Organization {
     private static Logger logger = Logger.getLogger(Organization.class);
-    private boolean freeOperators;
-    CallCenter callCenter;
+    private int clientCounter = 0;
+    private CallCenter callCenter;
+    private Manager manager;
 
+    public void setManager(Manager manager) {
+        this.manager = manager;
+        callCenter = new CallCenter(manager);
+    }
 
     public static Organization getInstance() {
-        logger.info(String.format(SINGLETON_CLASS_NAME_CREATED_FORMAT, Organization.class.toString()));
         return Organization.SingletonHolder.HOLDER_INSTANCE;
     }
 
-    @Override
-    public boolean isAnyOperatorFree() {
-        return freeOperators;
+    public CallCenter getCallCenter() {
+        return callCenter;
+    }
+
+    public boolean callUp(PersonThread e) {
+        return callCenter.clientAddInQueue(new Client(clientCounter++, e));
     }
 
     private static class SingletonHolder {
         static final Organization HOLDER_INSTANCE = new Organization();
     }
 
-    /**
-     * @author = Vadim Dirsha
-     * @date = 25.11.2018
-     */
-    public static interface IPeople {
-        void callInOrganization();
-        void hungUp();
+    public void startWork(){
+        manager.start();
     }
 }
