@@ -23,6 +23,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static ru.vadimdirsha.java.consts.LoggerMessageConst.*;
+
 /**
  * @author = Vadim Dirsha
  * @date = 26.11.2018
@@ -53,21 +55,25 @@ public class OperatorThread extends Thread {
 
     @Override
     public void run() {
-        setName(operator.getName() + "Thread");
+        setName(operator.getName() + "-" + call.getClient().getPerson().getName());
         while (!isInterrupted()) {
             if (call.isActive()) {
                 call.getClient().getPersonThread().setCommunication(true, this);
-                while (call.getClient().getPerson().isCommunicationState()) {
-                    lock.lock();
-                    try {
+                lock.lock();
+                logger.info(String.format(OPERATOR_ANSWERED_PERSON, call.getClient().getPerson().getName(), operator.getName()));
+                try {
+                    while (call.getClient().getPerson().isCommunicationState()) {
                         condition.await();
-                    } catch (InterruptedException e) {
-                        logger.error(e.getMessage(), e);
-                        interrupt();
-                    } finally {
-                        lock.unlock();
                     }
+                    logger.info(String.format(CALL_ID_ENDED, call.getId() + ""));
+                } catch (InterruptedException e) {
+                    logger.error(e.getMessage(), e);
+                    interrupt();
+                } finally {
+                    lock.unlock();
                 }
+            } else {
+                logger.info(String.format(PERSON_HUNG_UP_BEFORE_OPERATOR_ANSWER, call.getClient().getPerson().getName()));
             }
             operatorsRoom.addFreeOperator(operator);
             interrupt();

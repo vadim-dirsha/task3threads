@@ -56,7 +56,6 @@ public class Manager extends Thread {
             } finally {
                 lock.unlock();
             }
-
             createTask();
         }
     }

@@ -107,21 +107,21 @@ public class PersonThread extends Thread {
         person.setTimeOut(true);
         if (operatorThread != null) {
             logger.info(String.format(PEOPLE_COMMUNICATE_WITH_OPERATOR, person.getName()));
-            while (person.isCommunicationState()) {
-                lock.lock();
-                try {
+            lock.lock();
+            try {
+                while (person.isCommunicationState()) {
                     if (conditionCommunicate.await(person.getCommunicationTime(), TimeUnit.MILLISECONDS)) {
                         throw new InterruptedException();
                     } else {
                         person.setCommunicationState(false);
                         operatorThread.endCommunicate();
                     }
-                } catch (InterruptedException e) {
-                    logger.error(e.getMessage(), e);
-                    interrupt();
-                } finally {
-                    lock.unlock();
                 }
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage(), e);
+                interrupt();
+            } finally {
+                lock.unlock();
             }
             logger.info(String.format(PEOPLE_FINISH_COMMUNICATE_WITH_OPERATOR, person.getName()));
         }
@@ -147,8 +147,8 @@ public class PersonThread extends Thread {
 
     private void waitDelayBeforeCalling() {
         logger.info(String.format(PEOPLE_WILL_CALL_THE_ORGANIZATION_THROUGH_MILS, person.getName(), person.getDelayCalling()));
+        lock.lock();
         try {
-            lock.lock();
             while (isSomeObscureHappened) {
                 if (replaceSleep.await(person.getDelayCalling(), TimeUnit.MILLISECONDS)) {
                     throw new InterruptedException();
