@@ -29,6 +29,9 @@ public final class LoggerMessageConst {
     public static final String PEOPLE_FINISH_CALL = "%1$s finish call.";
     public static final String PEOPLE_STOPPED_WAITING_OPERATOR_RESPONSE = "%1$s stopped waiting operator response.";
     public static final String CALL_ADDED_IN_CALL_QUEUE_RESULT_ID_NAME = "Call added in CallQueue - %1$s, id - %2$s, name - %3$s";
+    public static final String PERSON_HUNG_UP_BEFORE_OPERATOR_ANSWER = "%1$s hung up before operator answer.";
+    public static final String OPERATOR_ANSWERED_PERSON = "%1$s answered %2$s";
+    public static final String CALL_ID_ENDED = "Call %1$s ended";
 
     private LoggerMessageConst() {
     }

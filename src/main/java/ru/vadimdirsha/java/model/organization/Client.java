@@ -28,12 +28,6 @@ public class Client {
     private Person person;
     private PersonThread personThread;
 
-    public Client(int id, Person person, PersonThread personThread) {
-        this.id = id;
-        this.person = person;
-        this.personThread = personThread;
-    }
-
     public Client(int id, PersonThread personThread) {
         this.id = id;
         this.personThread = personThread;

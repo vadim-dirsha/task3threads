@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
  */
 public class Call {
     private static Logger logger = Logger.getLogger(Call.class);
-    private boolean isActive = true;
     private int id;
     private Client client;
 
@@ -40,6 +39,6 @@ public class Call {
     }
 
     public boolean isActive() {
-        return isActive;
+        return client.getPersonThread().isAlive();
     }
 }

@@ -32,7 +32,7 @@ public class App {
         ArrayList<Person> people = new ArrayList<>();
         Random random = new Random(new Date().getTime());
         for (int i = 0; i < 25; i++) {
-            people.add(new Person("Man" + i, random.nextInt(2000), random.nextInt(30000), random.nextInt(12000), false));
+            people.add(new Person("Man" + i, random.nextInt(2000), random.nextInt(30000), random.nextInt(12000), true));
         }
 
         Organization organization = Organization.getInstance();
@@ -47,5 +47,6 @@ public class App {
         organization.startWork();
         threads.forEach(Thread::start);
         logger.info("main tread");
+        //TODO  проверка на то что бы звонок был активный нету
     }
 }

@@ -19,8 +19,11 @@ import ru.vadimdirsha.java.model.organization.Call;
 import ru.vadimdirsha.java.model.organization.Client;
 import ru.vadimdirsha.java.model.organization.OperatorsRoom;
 
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static ru.vadimdirsha.java.consts.LoggerMessageConst.*;
 
 /**
  * @author = Vadim Dirsha
@@ -28,10 +31,11 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class OperatorThread extends Thread {
     private static Logger logger = Logger.getLogger(Client.class);
-    OperatorsRoom operatorsRoom;
+    private OperatorsRoom operatorsRoom;
     private Operator operator;
     private Call call;
     private Lock lock = new ReentrantLock();
+    private Condition condition = lock.newCondition();
 
     public OperatorThread(Call call, Operator operator, OperatorsRoom operatorsRoom) {
         super();
@@ -40,24 +44,36 @@ public class OperatorThread extends Thread {
         this.operatorsRoom = operatorsRoom;
     }
 
+    public void endCommunicate() {
+        lock.lock();
+        try {
+            condition.signal();
+        } finally {
+            lock.unlock();
+        }
+    }
+
     @Override
     public void run() {
-        setName(operator.getName()+"Thread");
+        setName(operator.getName() + "-" + call.getClient().getPerson().getName());
         while (!isInterrupted()) {
-            call.getClient().getPersonThread().getLock().lock();
-            call.getClient().getPerson().setOperatorAnswered(true);
-            logger.info(String.format("Operator %1$s answered %2$s", operator.getName(), call.getClient().getPerson().getName()));
-            call.getClient().getPersonThread().getConditionWaitSignal().signal();
-            while (call.getClient().getPerson().isOperatorAnswered()) {
-
+            if (call.isActive()) {
+                call.getClient().getPersonThread().setCommunication(true, this);
+                lock.lock();
+                logger.info(String.format(OPERATOR_ANSWERED_PERSON, call.getClient().getPerson().getName(), operator.getName()));
                 try {
-                    call.getClient().getPersonThread().getConditionCommunicate().await();
+                    while (call.getClient().getPerson().isCommunicationState()) {
+                        condition.await();
+                    }
+                    logger.info(String.format(CALL_ID_ENDED, call.getId() + ""));
                 } catch (InterruptedException e) {
                     logger.error(e.getMessage(), e);
                     interrupt();
                 } finally {
-                    call.getClient().getPersonThread().getLock().unlock();
+                    lock.unlock();
                 }
+            } else {
+                logger.info(String.format(PERSON_HUNG_UP_BEFORE_OPERATOR_ANSWER, call.getClient().getPerson().getName()));
             }
             operatorsRoom.addFreeOperator(operator);
             interrupt();

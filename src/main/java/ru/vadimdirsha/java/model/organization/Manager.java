@@ -30,12 +30,13 @@ public class Manager extends Thread {
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
 
-    public Lock getLock() {
-        return lock;
-    }
-
-    public Condition getCondition() {
-        return condition;
+    public void lookAtIt() {
+        lock.lock();
+        try {
+            condition.signal();
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
@@ -44,16 +45,16 @@ public class Manager extends Thread {
         OperatorsRoom operatorsRoom = organization.getOperatorsRoom();
         CallCenter callCenter = organization.getCallCenter();
         while (!isInterrupted()) {
-            while (callCenter.isQueueEmpty() || !operatorsRoom.isSameOperatorFree()) {
-                lock.lock();
-                try {
+            lock.lock();
+            try {
+                while (callCenter.isQueueEmpty() || !operatorsRoom.isSameOperatorFree()) {
                     condition.await();
-                } catch (InterruptedException e) {
-                    logger.error(e.getMessage(), e);
-                    interrupt();
-                } finally {
-                    lock.unlock();
                 }
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage(), e);
+                interrupt();
+            } finally {
+                lock.unlock();
             }
             createTask();
         }
