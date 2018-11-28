@@ -29,7 +29,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class OperatorThread extends Thread {
     private static Logger logger = Logger.getLogger(Client.class);
-    OperatorsRoom operatorsRoom;
+    private OperatorsRoom operatorsRoom;
     private Operator operator;
     private Call call;
     private Lock lock = new ReentrantLock();

@@ -23,14 +23,14 @@ import org.apache.log4j.Logger;
 public class Operator {
     private static Logger logger = Logger.getLogger(Operator.class);
     private int id;
-    private String Name;
+    private String name;
 
     public Operator(int id, String name) {
         this.id = id;
-        Name = name;
+        this.name = name;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 }

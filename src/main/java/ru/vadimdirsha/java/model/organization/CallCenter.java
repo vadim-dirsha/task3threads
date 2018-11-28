@@ -30,11 +30,8 @@ import static ru.vadimdirsha.java.consts.LoggerMessageConst.CALL_ADDED_IN_CALL_Q
 public class CallCenter {
     private static Logger logger = Logger.getLogger(CallCenter.class);
     private Organization organization = Organization.getInstance();
-    private Lock lock = new ReentrantLock();
-
     private Queue<Call> calls = new ConcurrentLinkedQueue<>();
     private int callCounter;
-
 
     public boolean isQueueEmpty() {
         return calls.isEmpty();
