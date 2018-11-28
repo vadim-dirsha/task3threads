@@ -27,12 +27,12 @@ public class Person {
     private int waitOperator;
     private int communicationTime = 5000;
     private boolean reCall;
-    private boolean isOperatorAnswered = false;
+    private boolean communicationState = false;
     private boolean isTimeOut = false;
 
-    public Person(String name, int  delayCalling, int waitOperator, boolean reCall) {
+    public Person(String name, int delayCalling, int waitOperator, boolean reCall) {
         this.name = name;
-        this.delayCalling =  delayCalling;
+        this.delayCalling = delayCalling;
         this.waitOperator = waitOperator;
         this.reCall = reCall;
     }
@@ -77,12 +77,12 @@ public class Person {
         this.reCall = reCall;
     }
 
-    public boolean isOperatorAnswered() {
-        return isOperatorAnswered;
+    public boolean isCommunicationState() {
+        return communicationState;
     }
 
-    public void setOperatorAnswered(boolean operatorAnswered) {
-        isOperatorAnswered = operatorAnswered;
+    public void setCommunicationState(boolean communicationState) {
+        this.communicationState = communicationState;
     }
 
     public boolean isTimeOut() {

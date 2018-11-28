@@ -16,6 +16,7 @@ package ru.vadimdirsha.java.model.people;
 
 import org.apache.log4j.Logger;
 import ru.vadimdirsha.java.model.organization.Organization;
+import ru.vadimdirsha.java.model.organization.operators.OperatorThread;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -36,22 +37,27 @@ public class PersonThread extends Thread {
     private Condition conditionCommunicate = lock.newCondition();
     private boolean isSomeObscureHappened = true;
     private Person person;
+    private OperatorThread operatorThread;
 
     public PersonThread(Person person) {
         super();
         this.person = person;
     }
 
+    public void setCommunication(boolean communicationState, OperatorThread operatorThread) {
+        lock.lock();
+        try {
+            this.operatorThread = operatorThread;
+            person.setCommunicationState(communicationState);
+            conditionWaitSignal.signal();
+
+        } finally {
+            lock.unlock();
+        }
+    }
+
     public Person getPerson() {
         return person;
-    }
-
-    public Condition getConditionWaitSignal() {
-        return conditionWaitSignal;
-    }
-
-    public ReentrantLock getLock() {
-        return lock;
     }
 
     private void callInOrganization() {
@@ -76,7 +82,7 @@ public class PersonThread extends Thread {
 
             waitOperator();
 
-            if (person.isOperatorAnswered()) {
+            if (person.isCommunicationState()) {
                 communicateWithOperator();
             }
 
@@ -94,40 +100,38 @@ public class PersonThread extends Thread {
         person.setTimeOut(false);
         person.setReCall(false);
         person.setWaitOperator(new Random().nextInt(person.getWaitOperator()) + person.getWaitOperator());
-        person.setOperatorAnswered(false);
-    }
-
-    public Condition getConditionCommunicate() {
-        return conditionCommunicate;
+        person.setCommunicationState(false);
     }
 
     private void communicateWithOperator() {
         person.setTimeOut(true);
-        logger.info(String.format(PEOPLE_COMMUNICATE_WITH_OPERATOR, person.getName()));
-        while (person.isOperatorAnswered()) {
-            lock.lock();
-            try {
-                if (conditionCommunicate.await(person.getCommunicationTime(), TimeUnit.MILLISECONDS)) {
-                    throw new InterruptedException();
-                } else {
-                    person.setOperatorAnswered(false);
-                    conditionCommunicate.signal();
+        if (operatorThread != null) {
+            logger.info(String.format(PEOPLE_COMMUNICATE_WITH_OPERATOR, person.getName()));
+            while (person.isCommunicationState()) {
+                lock.lock();
+                try {
+                    if (conditionCommunicate.await(person.getCommunicationTime(), TimeUnit.MILLISECONDS)) {
+                        throw new InterruptedException();
+                    } else {
+                        person.setCommunicationState(false);
+                        operatorThread.endCommunicate();
+                    }
+                } catch (InterruptedException e) {
+                    logger.error(e.getMessage(), e);
+                    interrupt();
+                } finally {
+                    lock.unlock();
                 }
-            } catch (InterruptedException e) {
-                logger.error(e.getMessage(), e);
-                interrupt();
-            } finally {
-                lock.unlock();
             }
+            logger.info(String.format(PEOPLE_FINISH_COMMUNICATE_WITH_OPERATOR, person.getName()));
         }
-        logger.info(String.format(PEOPLE_FINISH_COMMUNICATE_WITH_OPERATOR, person.getName()));
     }
 
     private void waitOperator() {
         logger.info(String.format(PEOPLE_WAITING_A_RESPONSE_FROM_THE_OPERATOR_MILS, person.getName(), person.getWaitOperator()));
         lock.lock();
         try {
-            while (!person.isOperatorAnswered() && !person.isTimeOut()) {
+            while (!person.isCommunicationState() && !person.isTimeOut()) {
                 if (!conditionWaitSignal.await(person.getWaitOperator(), TimeUnit.MILLISECONDS)) {
                     person.setTimeOut(true);
                     logger.info(String.format(PEOPLE_STOPPED_WAITING_OPERATOR_RESPONSE, person.getName()));

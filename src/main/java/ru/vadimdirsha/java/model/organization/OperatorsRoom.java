@@ -39,14 +39,7 @@ public class OperatorsRoom {
 
     public void addFreeOperator(Operator e) {
         freeOperators.add(e);
-
-        Manager manager = organization.getManager();
-        manager.getLock().lock();
-        try {
-            manager.getCondition().signal();
-        } finally {
-            manager.getLock().unlock();
-        }
+        organization.getManager().lookAtIt();
     }
 
     public void createTask(Call call) {

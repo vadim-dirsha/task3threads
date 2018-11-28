@@ -25,12 +25,12 @@ public class Operator {
     private int id;
     private String Name;
 
-    public String getName() {
-        return Name;
-    }
-
     public Operator(int id, String name) {
         this.id = id;
         Name = name;
+    }
+
+    public String getName() {
+        return Name;
     }
 }

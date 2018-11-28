@@ -44,13 +44,7 @@ public class CallCenter {
         boolean result = calls.add(new Call(callCounter++, e));
         logger.info(String.format(CALL_ADDED_IN_CALL_QUEUE_RESULT_ID_NAME, result, callCounter - 1, e.getPersonThread().getPerson().getName()));
 
-        Manager manager = organization.getManager();
-        manager.getLock().lock();
-        try {
-            manager.getCondition().signal();
-        } finally {
-            manager.getLock().unlock();
-        }
+        organization.getManager().lookAtIt();
         return result;
     }
 
