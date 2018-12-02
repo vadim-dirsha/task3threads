@@ -16,6 +16,7 @@ package ru.vadimdirsha.java.model.people;
 
 import org.apache.log4j.Logger;
 import ru.vadimdirsha.java.model.organization.Manager;
+import ru.vadimdirsha.java.model.organization.Organization;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -25,17 +26,39 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author = Vadim Dirsha
  * @date = 29.11.2018
  */
-public class PhoneTread extends Thread {
+public class PhoneThread extends Thread {
     private static Logger logger = Logger.getLogger(Manager.class);
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
+    private Person person;
+    private PersonThread personThread;
 
-    private void hungUp() {
-        condition.signal();
+    public PhoneThread(PersonThread personThread) {
+        super();
+        this.person = personThread.getPerson();
+        this.personThread = personThread;
+    }
+
+    public PersonThread getPersonThread() {
+        return personThread;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void hungUp() {
+        lock.lock();
+        try {
+            condition.signal();
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public void run() {
+        setName(person.getName() + "Phone");
         while (!isInterrupted()) {
             lock.lock();
             try {
@@ -46,6 +69,7 @@ public class PhoneTread extends Thread {
             } finally {
                 lock.unlock();
             }
+            interrupt();
         }
     }
 }

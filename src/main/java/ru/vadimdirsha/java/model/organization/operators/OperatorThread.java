@@ -19,6 +19,7 @@ import ru.vadimdirsha.java.model.organization.Call;
 import ru.vadimdirsha.java.model.organization.Client;
 import ru.vadimdirsha.java.model.organization.OperatorsRoom;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -44,26 +45,17 @@ public class OperatorThread extends Thread {
         this.operatorsRoom = operatorsRoom;
     }
 
-    public void endCommunicate() {
-        lock.lock();
-        try {
-            condition.signal();
-        } finally {
-            lock.unlock();
-        }
-    }
-
     @Override
     public void run() {
         setName(operator.getName() + "-" + call.getClient().getPerson().getName());
         while (!isInterrupted()) {
             if (call.isActive()) {
-                call.getClient().getPersonThread().setCommunication(true, this);
                 lock.lock();
+                call.getClient().getPhoneThread().getPersonThread().setCommunicationState(true);
                 logger.info(String.format(OPERATOR_ANSWERED_PERSON, call.getClient().getPerson().getName(), operator.getName()));
                 try {
-                    while (call.getClient().getPerson().isCommunicationState()) {
-                        condition.await();
+                    while (call.isActive()) {
+                        condition.await(500, TimeUnit.MILLISECONDS);
                     }
                     logger.info(String.format(CALL_ID_ENDED, call.getId() + ""));
                 } catch (InterruptedException e) {

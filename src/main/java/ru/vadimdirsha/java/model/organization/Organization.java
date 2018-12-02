@@ -16,6 +16,7 @@ package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
 import ru.vadimdirsha.java.model.people.PersonThread;
+import ru.vadimdirsha.java.model.people.PhoneThread;
 
 /**
  * @author = Vadim Dirsha
@@ -50,7 +51,7 @@ public final class Organization {
         return callCenter;
     }
 
-    public boolean callUp(PersonThread e) {
+    public boolean callUp(PhoneThread e) {
         boolean result = callCenter.clientAddInQueue(new Client(clientCounter++, e));
         return result;
     }

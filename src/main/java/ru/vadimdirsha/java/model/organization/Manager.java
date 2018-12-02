@@ -16,6 +16,7 @@ package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,6 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date = 27.11.2018
  */
 public class Manager extends Thread {
+    public static final String END_OF_WORK_DAY = "end of work day";
     private static Logger logger = Logger.getLogger(Manager.class);
     private Organization organization = Organization.getInstance();
     private Lock lock = new ReentrantLock();
@@ -48,7 +50,9 @@ public class Manager extends Thread {
             lock.lock();
             try {
                 while (callCenter.isQueueEmpty() || !operatorsRoom.isSameOperatorFree()) {
-                    condition.await();
+                    if (!condition.await(120000, TimeUnit.MILLISECONDS)) {
+                        throw new InterruptedException(END_OF_WORK_DAY);
+                    }
                 }
             } catch (InterruptedException e) {
                 logger.error(e.getMessage(), e);

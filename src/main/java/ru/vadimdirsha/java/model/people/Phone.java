@@ -14,9 +14,26 @@
  */
 package ru.vadimdirsha.java.model.people;
 
+import ru.vadimdirsha.java.model.organization.Organization;
+
 /**
  * @author = Vadim Dirsha
  * @date = 29.11.2018
  */
 public class Phone {
+    private PhoneThread phoneThread;
+
+    public void callInOrganization(PersonThread personThread) {
+        phoneThread = new PhoneThread(personThread);
+        phoneThread.start();
+        if (!Organization.getInstance().callUp(phoneThread)) {
+            phoneThread.interrupt();
+        }
+
+    }
+
+    public void hungUp() {
+        if (phoneThread != null)
+            phoneThread.hungUp();
+    }
 }
