@@ -28,7 +28,6 @@ public class Person {
     private int communicationTime = 5000;
     private boolean reCall;
     private boolean communicationState = false;
-    private boolean isTimeOut = false;
 
     public Person(String name, int delayCalling, int waitOperator, boolean reCall) {
         this.name = name;
@@ -85,11 +84,4 @@ public class Person {
         this.communicationState = communicationState;
     }
 
-    public boolean isTimeOut() {
-        return isTimeOut;
-    }
-
-    public void setTimeOut(boolean timeOut) {
-        isTimeOut = timeOut;
-    }
 }

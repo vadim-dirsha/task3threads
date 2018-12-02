@@ -12,27 +12,42 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model.organization;
+package ru.vadimdirsha.java.model.people;
 
 import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.model.organization.Manager;
+import ru.vadimdirsha.java.model.organization.Organization;
 
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author = Vadim Dirsha
- * @date = 27.11.2018
+ * @date = 29.11.2018
  */
-public class Manager extends Thread {
-    public static final String END_OF_WORK_DAY = "end of work day";
+public class PhoneThread extends Thread {
     private static Logger logger = Logger.getLogger(Manager.class);
-    private Organization organization = Organization.getInstance();
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
+    private Person person;
+    private PersonThread personThread;
 
-    public void lookAtIt() {
+    public PhoneThread(PersonThread personThread) {
+        super();
+        this.person = personThread.getPerson();
+        this.personThread = personThread;
+    }
+
+    public PersonThread getPersonThread() {
+        return personThread;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void hungUp() {
         lock.lock();
         try {
             condition.signal();
@@ -43,28 +58,18 @@ public class Manager extends Thread {
 
     @Override
     public void run() {
-        setName("Manager");
-        OperatorsRoom operatorsRoom = organization.getOperatorsRoom();
-        CallCenter callCenter = organization.getCallCenter();
+        setName(person.getName() + "Phone");
         while (!isInterrupted()) {
             lock.lock();
             try {
-                while (callCenter.isQueueEmpty() || !operatorsRoom.isSameOperatorFree()) {
-                    if (!condition.await(120000, TimeUnit.MILLISECONDS)) {
-                        throw new InterruptedException(END_OF_WORK_DAY);
-                    }
-                }
+                condition.await();
             } catch (InterruptedException e) {
                 logger.error(e.getMessage(), e);
                 interrupt();
             } finally {
                 lock.unlock();
             }
-            createTask();
+            interrupt();
         }
-    }
-
-    private void createTask() {
-        organization.getOperatorsRoom().createTask(organization.getCallCenter().getCalls().poll());
     }
 }

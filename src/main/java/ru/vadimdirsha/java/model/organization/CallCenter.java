@@ -18,8 +18,6 @@ import org.apache.log4j.Logger;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static ru.vadimdirsha.java.consts.LoggerMessageConst.CALL_ADDED_IN_CALL_QUEUE_RESULT_ID_NAME;
 
@@ -39,7 +37,7 @@ public class CallCenter {
 
     public boolean clientAddInQueue(Client e) {
         boolean result = calls.add(new Call(callCounter++, e));
-        logger.info(String.format(CALL_ADDED_IN_CALL_QUEUE_RESULT_ID_NAME, result, callCounter - 1, e.getPersonThread().getPerson().getName()));
+        logger.info(String.format(CALL_ADDED_IN_CALL_QUEUE_RESULT_ID_NAME, result, callCounter - 1, e.getPhoneThread().getPerson().getName()));
 
         organization.getManager().lookAtIt();
         return result;

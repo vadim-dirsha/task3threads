@@ -39,6 +39,6 @@ public class Call {
     }
 
     public boolean isActive() {
-        return client.getPersonThread().isAlive();
+        return client.getPhoneThread().isAlive();
     }
 }

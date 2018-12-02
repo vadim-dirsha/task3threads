@@ -16,7 +16,7 @@ package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
 import ru.vadimdirsha.java.model.people.Person;
-import ru.vadimdirsha.java.model.people.PersonThread;
+import ru.vadimdirsha.java.model.people.PhoneThread;
 
 /**
  * @author = Vadim Dirsha
@@ -26,20 +26,20 @@ public class Client {
     private static Logger logger = Logger.getLogger(Client.class);
     private int id;
     private Person person;
-    private PersonThread personThread;
+    private PhoneThread phoneThread;
 
-    public Client(int id, PersonThread personThread) {
+    public Client(int id, PhoneThread phoneThread) {
         this.id = id;
-        this.personThread = personThread;
-        this.person = personThread.getPerson();
+        this.phoneThread = phoneThread;
+        this.person = phoneThread.getPerson();
     }
 
     public Person getPerson() {
         return person;
     }
 
-    public PersonThread getPersonThread() {
-        return personThread;
+    public PhoneThread getPhoneThread() {
+        return phoneThread;
     }
 
 }

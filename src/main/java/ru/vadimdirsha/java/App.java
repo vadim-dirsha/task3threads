@@ -17,13 +17,6 @@ public class App {
     public static void main(String[] args) {
         //ide doesn't copy log4j.properties to classes folder (classpath)
         //BasicConfigurator.configure();
-        /*
-        TODO предварительно, клиент и коллцентр потоки которые управляют звонками, оператор и коллцентор части организации,
-        возможно нужна фабрика для килентов которая задает им парметры типа предварительной длинны звонка и проч
-        коллцентр управляет очередью звонков, организация управялет операторами и коллценгтром
-        reorganization(reorgProt) class reorganizationProtocol.BANKROT kappa
-        */
-        //Condition.await/signal решит проблему
 
         ArrayList<Operator> operators = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
@@ -32,7 +25,7 @@ public class App {
         ArrayList<Person> people = new ArrayList<>();
         Random random = new Random(new Date().getTime());
         for (int i = 0; i < 25; i++) {
-            people.add(new Person("Man" + i, random.nextInt(2000), random.nextInt(30000), random.nextInt(12000), true));
+            people.add(new Person("Man" + i, 1000 + i * 100, 200000, 10000, false));
         }
 
         Organization organization = Organization.getInstance();
@@ -47,6 +40,6 @@ public class App {
         organization.startWork();
         threads.forEach(Thread::start);
         logger.info("main tread");
-        //TODO  проверка на то что бы звонок был активный нету
+
     }
 }
