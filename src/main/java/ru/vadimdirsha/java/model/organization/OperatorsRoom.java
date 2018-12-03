@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author = Vadim Dirsha
  * @date = 27.11.2018
  */
-public class OperatorsRoom implements IOperatorsRoom{
+public class OperatorsRoom implements IOperatorsRoom {
     private static Logger logger = Logger.getLogger(OperatorsRoom.class);
     private Organization organization = Organization.getInstance();
     private Queue<IOperator> freeOperators = new ConcurrentLinkedQueue<>();

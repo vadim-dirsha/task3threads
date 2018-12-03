@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public class Call implements ICall{
+public class Call implements ICall {
     private static Logger logger = Logger.getLogger(Call.class);
     private int id;
     private IClient client;

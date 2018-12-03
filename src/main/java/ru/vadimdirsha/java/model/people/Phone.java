@@ -22,7 +22,7 @@ import ru.vadimdirsha.java.unit_behavior.PhoneThread;
  * @author = Vadim Dirsha
  * @date = 29.11.2018
  */
-public class Phone implements IPhone{
+public class Phone implements IPhone {
     private PhoneThread phoneThread;
 
     public void callInOrganization(PersonThread personThread) {

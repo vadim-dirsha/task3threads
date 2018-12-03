@@ -20,6 +20,7 @@ package ru.vadimdirsha.java.model.people;
  */
 public interface IPerson {
     public boolean isSatisfied();
+
     public boolean isReCall();
 
     public boolean isCommunicationState();

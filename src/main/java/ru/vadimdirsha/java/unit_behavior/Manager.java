@@ -31,11 +31,15 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class Manager extends Thread implements IManager {
     public static final String END_OF_WORK_DAY = "end of work day";
-    private int waitWithoutWork = 120000;
     private static Logger logger = Logger.getLogger(Manager.class);
+    private int waitWithoutWork = 120000;
     private Organization organization = Organization.getInstance();
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
+
+    public void setWaitWithoutWork(int waitWithoutWork) {
+        this.waitWithoutWork = waitWithoutWork;
+    }
 
     public void lookAtIt() {
         lock.lock();
