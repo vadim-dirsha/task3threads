@@ -18,5 +18,10 @@ package ru.vadimdirsha.java.model.organization;
  * @author = Vadim Dirsha
  * @date = 03.12.2018
  */
-public class IOperatorsRoom {
+public interface IOperatorsRoom {
+    public boolean isSameOperatorFree();
+
+    public void addFreeOperator(IOperator e);
+
+    public void createTask(Call call);
 }

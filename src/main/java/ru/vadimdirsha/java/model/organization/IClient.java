@@ -14,9 +14,15 @@
  */
 package ru.vadimdirsha.java.model.organization;
 
+import ru.vadimdirsha.java.model.people.Person;
+import ru.vadimdirsha.java.unit_behavior.PhoneThread;
+
 /**
  * @author = Vadim Dirsha
  * @date = 03.12.2018
  */
 public interface IClient {
+    public Person getPerson();
+
+    public PhoneThread getPhoneThread();
 }

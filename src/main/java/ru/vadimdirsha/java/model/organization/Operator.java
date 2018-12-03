@@ -12,7 +12,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model.organization.operators;
+package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
 
@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public class Operator {
+public class Operator implements IOperator{
     private static Logger logger = Logger.getLogger(Operator.class);
     private int id;
     private String name;

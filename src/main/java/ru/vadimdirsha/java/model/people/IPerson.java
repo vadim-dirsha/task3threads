@@ -18,5 +18,10 @@ package ru.vadimdirsha.java.model.people;
  * @author = Vadim Dirsha
  * @date = 03.12.2018
  */
-public class IPerson {
+public interface IPerson {
+    public boolean isSatisfied();
+    public boolean isReCall();
+
+    public boolean isCommunicationState();
+
 }

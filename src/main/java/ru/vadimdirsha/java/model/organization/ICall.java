@@ -19,4 +19,9 @@ package ru.vadimdirsha.java.model.organization;
  * @date = 03.12.2018
  */
 public interface ICall {
+    public IClient getClient();
+
+    public int getId();
+
+    public boolean isActive();
 }

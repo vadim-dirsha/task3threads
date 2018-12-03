@@ -12,13 +12,10 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model.organization.operators;
+package ru.vadimdirsha.java.unit_behavior;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.model.organization.Call;
-import ru.vadimdirsha.java.model.organization.Client;
-import ru.vadimdirsha.java.model.organization.OperatorsRoom;
-import ru.vadimdirsha.java.model.organization.Organization;
+import ru.vadimdirsha.java.model.organization.*;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -33,13 +30,13 @@ import static ru.vadimdirsha.java.consts.LoggerMessageConst.*;
  */
 public class OperatorThread extends Thread {
     private static Logger logger = Logger.getLogger(Client.class);
-    private OperatorsRoom operatorsRoom = Organization.getInstance().getOperatorsRoom();
-    private Operator operator;
+    private IOperatorsRoom operatorsRoom = Organization.getInstance().getOperatorsRoom();
+    private IOperator operator;
     private Call call;
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
 
-    public OperatorThread(Call call, Operator operator) {
+    public OperatorThread(Call call, IOperator operator) {
         super();
         this.call = call;
         this.operator = operator;

@@ -20,13 +20,15 @@ import org.apache.log4j.Logger;
  * @author = Vadim Dirsha
  * @date = 26.11.2018
  */
-public class Person {
+public class Person implements IPerson {
     private static Logger logger = Logger.getLogger(Person.class);
     private String name;
     private int delayCalling;
     private int waitOperator;
     private int communicationTime = 5000;
     private boolean reCall;
+    private int reCallCounter = 0;
+    private boolean isSatisfied = false;
     private boolean communicationState = false;
 
     public Person(String name, int delayCalling, int waitOperator, boolean reCall) {
@@ -44,6 +46,22 @@ public class Person {
         this.reCall = reCall;
     }
 
+    public int getReCallCounter() {
+        return reCallCounter;
+    }
+
+    public void setReCallCounter(int reCallCounter) {
+        this.reCallCounter = reCallCounter;
+    }
+
+    public boolean isSatisfied() {
+        return isSatisfied;
+    }
+
+    public void setSatisfied(boolean satisfied) {
+        isSatisfied = satisfied;
+    }
+
     public int getCommunicationTime() {
         return communicationTime;
     }
@@ -56,10 +74,6 @@ public class Person {
         return delayCalling;
     }
 
-    public void setDelayCalling(int delayCalling) {
-        this.delayCalling = delayCalling;
-    }
-
     public int getWaitOperator() {
         return waitOperator;
     }
@@ -70,10 +84,6 @@ public class Person {
 
     public boolean isReCall() {
         return reCall;
-    }
-
-    public void setReCall(boolean reCall) {
-        this.reCall = reCall;
     }
 
     public boolean isCommunicationState() {

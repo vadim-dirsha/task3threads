@@ -12,9 +12,13 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model.organization;
+package ru.vadimdirsha.java.unit_behavior;
 
 import org.apache.log4j.Logger;
+import ru.vadimdirsha.java.model.organization.CallCenter;
+import ru.vadimdirsha.java.model.organization.IManager;
+import ru.vadimdirsha.java.model.organization.IOperatorsRoom;
+import ru.vadimdirsha.java.model.organization.Organization;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -25,7 +29,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author = Vadim Dirsha
  * @date = 27.11.2018
  */
-public class Manager extends Thread {
+public class Manager extends Thread implements IManager {
     public static final String END_OF_WORK_DAY = "end of work day";
     private static Logger logger = Logger.getLogger(Manager.class);
     private Organization organization = Organization.getInstance();
@@ -44,7 +48,7 @@ public class Manager extends Thread {
     @Override
     public void run() {
         setName("Manager");
-        OperatorsRoom operatorsRoom = organization.getOperatorsRoom();
+        IOperatorsRoom operatorsRoom = organization.getOperatorsRoom();
         CallCenter callCenter = organization.getCallCenter();
         while (!isInterrupted()) {
             lock.lock();

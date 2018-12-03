@@ -16,13 +16,13 @@ package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
 import ru.vadimdirsha.java.model.people.Person;
-import ru.vadimdirsha.java.model.people.PhoneThread;
+import ru.vadimdirsha.java.unit_behavior.PhoneThread;
 
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public class Client {
+public class Client implements IClient {
     private static Logger logger = Logger.getLogger(Client.class);
     private int id;
     private Person person;

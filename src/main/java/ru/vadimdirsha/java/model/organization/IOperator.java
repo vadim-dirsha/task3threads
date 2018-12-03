@@ -19,4 +19,5 @@ package ru.vadimdirsha.java.model.organization;
  * @date = 03.12.2018
  */
 public interface IOperator {
+    public String getName();
 }

@@ -15,12 +15,14 @@
 package ru.vadimdirsha.java.model.people;
 
 import ru.vadimdirsha.java.model.organization.Organization;
+import ru.vadimdirsha.java.unit_behavior.PersonThread;
+import ru.vadimdirsha.java.unit_behavior.PhoneThread;
 
 /**
  * @author = Vadim Dirsha
  * @date = 29.11.2018
  */
-public class Phone {
+public class Phone implements IPhone{
     private PhoneThread phoneThread;
 
     public void callInOrganization(PersonThread personThread) {

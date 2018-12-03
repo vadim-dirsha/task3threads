@@ -2,14 +2,12 @@ package ru.vadimdirsha.java;
 
 import org.apache.log4j.Logger;
 import ru.vadimdirsha.java.model.organization.Organization;
-import ru.vadimdirsha.java.model.organization.operators.Operator;
+import ru.vadimdirsha.java.model.organization.Operator;
 import ru.vadimdirsha.java.model.people.Person;
-import ru.vadimdirsha.java.model.people.PersonThread;
+import ru.vadimdirsha.java.unit_behavior.PersonThread;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
-import java.util.Random;
 
 public class App {
     private static Logger logger = Logger.getLogger(App.class);
@@ -23,8 +21,7 @@ public class App {
             operators.add(new Operator(i, "Operator" + i));
         }
         ArrayList<Person> people = new ArrayList<>();
-        Random random = new Random(new Date().getTime());
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 7; i++) {
             people.add(new Person("Man" + i, 1000 + i * 100, 200000, 10000, false));
         }
 

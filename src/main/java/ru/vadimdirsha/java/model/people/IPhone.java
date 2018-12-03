@@ -14,9 +14,14 @@
  */
 package ru.vadimdirsha.java.model.people;
 
+import ru.vadimdirsha.java.unit_behavior.PersonThread;
+
 /**
  * @author = Vadim Dirsha
  * @date = 03.12.2018
  */
 public interface IPhone {
+    public void callInOrganization(PersonThread personThread);
+
+    public void hungUp();
 }

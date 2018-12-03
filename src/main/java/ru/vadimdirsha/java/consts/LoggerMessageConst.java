@@ -25,7 +25,7 @@ public final class LoggerMessageConst {
     public static final String SINGLETON_CLASS_NAME_CREATED_FORMAT = "Singleton %1$s created.";
     public static final String PEOPLE_COMMUNICATE_WITH_OPERATOR = "%1$s communicate with operator.";
     public static final String PEOPLE_FINISH_COMMUNICATE_WITH_OPERATOR = "%1$s finish communicate with operator.";
-    public static final String PEOPLE_RE_CALL = "%1$s reCall.";
+    public static final String PEOPLE_RE_CALL = "%1$s recall %2$s time.";
     public static final String PEOPLE_FINISH_CALL = "%1$s finish call.";
     public static final String PEOPLE_STOPPED_WAITING_OPERATOR_RESPONSE = "%1$s stopped waiting operator response.";
     public static final String CALL_ADDED_IN_CALL_QUEUE_RESULT_ID_NAME = "Call added in CallQueue - %1$s, id - %2$s, name - %3$s";

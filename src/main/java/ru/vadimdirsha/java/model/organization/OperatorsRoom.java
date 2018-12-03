@@ -15,8 +15,7 @@
 package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.model.organization.operators.Operator;
-import ru.vadimdirsha.java.model.organization.operators.OperatorThread;
+import ru.vadimdirsha.java.unit_behavior.OperatorThread;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,24 +26,24 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author = Vadim Dirsha
  * @date = 27.11.2018
  */
-public class OperatorsRoom {
+public class OperatorsRoom implements IOperatorsRoom{
     private static Logger logger = Logger.getLogger(OperatorsRoom.class);
     private Organization organization = Organization.getInstance();
-    private Queue<Operator> freeOperators = new ConcurrentLinkedQueue<>();
+    private Queue<IOperator> freeOperators = new ConcurrentLinkedQueue<>();
     private List<OperatorThread> tasks = new ArrayList<>();
 
     public boolean isSameOperatorFree() {
         return !freeOperators.isEmpty();
     }
 
-    public void addFreeOperator(Operator e) {
+    public void addFreeOperator(IOperator e) {
         freeOperators.add(e);
         organization.getManager().lookAtIt();
     }
 
     public void createTask(Call call) {
         if (!freeOperators.isEmpty()) {
-            OperatorThread thread = new OperatorThread(call, freeOperators.poll(), this);
+            OperatorThread thread = new OperatorThread(call, freeOperators.poll());
             tasks.add(thread);
             thread.start();
         }
