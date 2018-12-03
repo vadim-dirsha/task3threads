@@ -16,7 +16,6 @@ package ru.vadimdirsha.java.model.people;
 
 import org.apache.log4j.Logger;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -37,13 +36,13 @@ public class PersonThread extends Thread {
     private Person person;
     private Phone phone = new Phone();
 
-    public Person getPerson() {
-        return person;
-    }
-
     public PersonThread(Person person) {
         super();
         this.person = person;
+    }
+
+    public Person getPerson() {
+        return person;
     }
 
     public void setCommunicationState(boolean e) {
@@ -82,7 +81,7 @@ public class PersonThread extends Thread {
 
         hungUp();
 
-        if (person.isReCall()) {
+        if (person.isReCall() && !person.isSatisfied()) {
             reCallInitiate();
         }
 
@@ -90,10 +89,9 @@ public class PersonThread extends Thread {
     }
 
     private void reCallInitiate() {
-        logger.info(String.format(PEOPLE_RE_CALL, person.getName()));
-        person.setReCall(false);
-        person.setWaitOperator(new Random().nextInt(person.getWaitOperator()) + person.getWaitOperator());
+        person.setReCallCounter(person.getReCallCounter() + 1);
         person.setCommunicationState(false);
+        logger.info(String.format(PEOPLE_RE_CALL, person.getName(), person.getReCallCounter()));
         this.run();
     }
 
@@ -106,6 +104,7 @@ public class PersonThread extends Thread {
                     throw new InterruptedException();
                 } else {
                     person.setCommunicationState(false);
+                    person.setSatisfied(true);
                     phone.hungUp();
                 }
             }

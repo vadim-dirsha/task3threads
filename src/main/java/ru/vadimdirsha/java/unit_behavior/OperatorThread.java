@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import ru.vadimdirsha.java.model.organization.Call;
 import ru.vadimdirsha.java.model.organization.Client;
 import ru.vadimdirsha.java.model.organization.OperatorsRoom;
+import ru.vadimdirsha.java.model.organization.Organization;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -32,17 +33,16 @@ import static ru.vadimdirsha.java.consts.LoggerMessageConst.*;
  */
 public class OperatorThread extends Thread {
     private static Logger logger = Logger.getLogger(Client.class);
-    private OperatorsRoom operatorsRoom;
+    private OperatorsRoom operatorsRoom = Organization.getInstance().getOperatorsRoom();
     private Operator operator;
     private Call call;
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
 
-    public OperatorThread(Call call, Operator operator, OperatorsRoom operatorsRoom) {
+    public OperatorThread(Call call, Operator operator) {
         super();
         this.call = call;
         this.operator = operator;
-        this.operatorsRoom = operatorsRoom;
     }
 
     @Override
