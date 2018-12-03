@@ -15,31 +15,22 @@
 package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.model.people.Person;
-import ru.vadimdirsha.java.unit_behavior.PhoneThread;
 
 /**
  * @author = Vadim Dirsha
  * @date = 24.11.2018
  */
-public class Client implements IClient {
-    private static Logger logger = Logger.getLogger(Client.class);
+public class Operator implements IOperator {
+    private static Logger logger = Logger.getLogger(Operator.class);
     private int id;
-    private Person person;
-    private PhoneThread phoneThread;
+    private String name;
 
-    public Client(int id, PhoneThread phoneThread) {
+    public Operator(int id, String name) {
         this.id = id;
-        this.phoneThread = phoneThread;
-        this.person = phoneThread.getPerson();
+        this.name = name;
     }
 
-    public Person getPerson() {
-        return person;
+    public String getName() {
+        return name;
     }
-
-    public PhoneThread getPhoneThread() {
-        return phoneThread;
-    }
-
 }

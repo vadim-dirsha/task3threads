@@ -49,3 +49,4 @@ modules.xml
 *.ipr
 
 .idea/
+src/test/java/ru/vadimdirsha/java/CodeStashe.java

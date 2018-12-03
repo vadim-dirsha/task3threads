@@ -14,28 +14,14 @@
  */
 package ru.vadimdirsha.java.model.people;
 
-import ru.vadimdirsha.java.model.organization.Organization;
 import ru.vadimdirsha.java.unit_behavior.PersonThread;
-import ru.vadimdirsha.java.unit_behavior.PhoneThread;
 
 /**
  * @author = Vadim Dirsha
- * @date = 29.11.2018
+ * @date = 03.12.2018
  */
-public class Phone implements IPhone {
-    private PhoneThread phoneThread;
+public interface IPhone {
+    public void callInOrganization(PersonThread personThread);
 
-    public void callInOrganization(PersonThread personThread) {
-        phoneThread = new PhoneThread(personThread);
-        phoneThread.start();
-        if (!Organization.getInstance().callUp(phoneThread)) {
-            phoneThread.interrupt();
-        }
-
-    }
-
-    public void hungUp() {
-        if (phoneThread != null)
-            phoneThread.hungUp();
-    }
+    public void hungUp();
 }

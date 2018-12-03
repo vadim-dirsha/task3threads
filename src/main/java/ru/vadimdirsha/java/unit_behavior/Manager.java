@@ -12,42 +12,36 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model.people;
+package ru.vadimdirsha.java.unit_behavior;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.model.organization.Manager;
+import ru.vadimdirsha.java.model.organization.CallCenter;
+import ru.vadimdirsha.java.model.organization.IManager;
+import ru.vadimdirsha.java.model.organization.IOperatorsRoom;
 import ru.vadimdirsha.java.model.organization.Organization;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author = Vadim Dirsha
- * @date = 29.11.2018
+ * @date = 27.11.2018
  */
-public class PhoneThread extends Thread {
+public class Manager extends Thread implements IManager {
+    public static final String END_OF_WORK_DAY = "end of work day";
     private static Logger logger = Logger.getLogger(Manager.class);
+    private int waitWithoutWork = 120000;
+    private Organization organization = Organization.getInstance();
     private Lock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
-    private Person person;
-    private PersonThread personThread;
 
-    public PhoneThread(PersonThread personThread) {
-        super();
-        this.person = personThread.getPerson();
-        this.personThread = personThread;
+    public void setWaitWithoutWork(int waitWithoutWork) {
+        this.waitWithoutWork = waitWithoutWork;
     }
 
-    public PersonThread getPersonThread() {
-        return personThread;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void hungUp() {
+    public void lookAtIt() {
         lock.lock();
         try {
             condition.signal();
@@ -58,18 +52,31 @@ public class PhoneThread extends Thread {
 
     @Override
     public void run() {
-        setName(person.getName() + "Phone");
+        setName("Manager");
+        IOperatorsRoom operatorsRoom = organization.getOperatorsRoom();
+        CallCenter callCenter = organization.getCallCenter();
         while (!isInterrupted()) {
             lock.lock();
             try {
-                condition.await();
+                while ((callCenter.isQueueEmpty() || !operatorsRoom.isSameOperatorFree()) && !isInterrupted()) {
+                    if (!condition.await(waitWithoutWork, TimeUnit.MILLISECONDS)) {
+                        logger.info(END_OF_WORK_DAY);
+                        interrupt();
+                    }
+                }
             } catch (InterruptedException e) {
                 logger.error(e.getMessage(), e);
                 interrupt();
             } finally {
                 lock.unlock();
             }
-            interrupt();
+            if (!isInterrupted()) {
+                createTask();
+            }
         }
+    }
+
+    private void createTask() {
+        organization.getOperatorsRoom().createTask(organization.getCallCenter().getCalls().poll());
     }
 }

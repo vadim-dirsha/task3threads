@@ -12,23 +12,17 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model.utils;
+package ru.vadimdirsha.java.model.organization;
 
-import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.model.organization.operators.Operator;
 import ru.vadimdirsha.java.model.people.Person;
+import ru.vadimdirsha.java.unit_behavior.PhoneThread;
 
 /**
  * @author = Vadim Dirsha
- * @date = 25.11.2018
+ * @date = 03.12.2018
  */
-public final class Hive {
-    private static Logger logger = Logger.getLogger(Hive.class);
+public interface IClient {
+    public Person getPerson();
 
-    public static Person createPerson(){
-        return null;
-    }
-    public static Operator createOperator(){
-        return null;
-    }
+    public PhoneThread getPhoneThread();
 }

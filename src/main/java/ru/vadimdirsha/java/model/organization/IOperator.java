@@ -14,31 +14,10 @@
  */
 package ru.vadimdirsha.java.model.organization;
 
-import org.apache.log4j.Logger;
-
 /**
  * @author = Vadim Dirsha
- * @date = 24.11.2018
+ * @date = 03.12.2018
  */
-public class Call implements ICall {
-    private static Logger logger = Logger.getLogger(Call.class);
-    private int id;
-    private IClient client;
-
-    public Call(int id, IClient client) {
-        this.id = id;
-        this.client = client;
-    }
-
-    public IClient getClient() {
-        return client;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public boolean isActive() {
-        return client.getPhoneThread().isAlive();
-    }
+public interface IOperator {
+    public String getName();
 }

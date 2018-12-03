@@ -15,8 +15,8 @@
 package ru.vadimdirsha.java.model.organization;
 
 import org.apache.log4j.Logger;
-import ru.vadimdirsha.java.model.people.PersonThread;
-import ru.vadimdirsha.java.model.people.PhoneThread;
+import ru.vadimdirsha.java.unit_behavior.Manager;
+import ru.vadimdirsha.java.unit_behavior.PhoneThread;
 
 /**
  * @author = Vadim Dirsha
@@ -27,7 +27,7 @@ public final class Organization {
     private int clientCounter = 0;
     private CallCenter callCenter;
     private Manager manager;
-    private OperatorsRoom operatorsRoom;
+    private IOperatorsRoom operatorsRoom;
 
     public static Organization getInstance() {
         return Organization.SingletonHolder.HOLDER_INSTANCE;
@@ -39,11 +39,11 @@ public final class Organization {
         this.operatorsRoom = new OperatorsRoom();
     }
 
-    public Manager getManager() {
+    public IManager getManager() {
         return manager;
     }
 
-    public OperatorsRoom getOperatorsRoom() {
+    public IOperatorsRoom getOperatorsRoom() {
         return operatorsRoom;
     }
 
@@ -52,8 +52,7 @@ public final class Organization {
     }
 
     public boolean callUp(PhoneThread e) {
-        boolean result = callCenter.clientAddInQueue(new Client(clientCounter++, e));
-        return result;
+        return callCenter.clientAddInQueue(new Client(clientCounter++, e));
     }
 
     public void startWork() {

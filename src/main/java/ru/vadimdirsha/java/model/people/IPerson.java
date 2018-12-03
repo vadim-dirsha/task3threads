@@ -12,25 +12,17 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ru.vadimdirsha.java.model.organization.operators;
-
-import org.apache.log4j.Logger;
+package ru.vadimdirsha.java.model.people;
 
 /**
  * @author = Vadim Dirsha
- * @date = 24.11.2018
+ * @date = 03.12.2018
  */
-public class Operator {
-    private static Logger logger = Logger.getLogger(Operator.class);
-    private int id;
-    private String name;
+public interface IPerson {
+    public boolean isSatisfied();
 
-    public Operator(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    public boolean isReCall();
 
-    public String getName() {
-        return name;
-    }
+    public boolean isCommunicationState();
+
 }
