@@ -31,6 +31,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class Manager extends Thread implements IManager {
     public static final String END_OF_WORK_DAY = "end of work day";
+    private int waitWithoutWork = 120000;
     private static Logger logger = Logger.getLogger(Manager.class);
     private Organization organization = Organization.getInstance();
     private Lock lock = new ReentrantLock();
@@ -54,7 +55,7 @@ public class Manager extends Thread implements IManager {
             lock.lock();
             try {
                 while (callCenter.isQueueEmpty() || !operatorsRoom.isSameOperatorFree()) {
-                    if (!condition.await(120000, TimeUnit.MILLISECONDS)) {
+                    if (!condition.await(waitWithoutWork, TimeUnit.MILLISECONDS)) {
                         throw new InterruptedException(END_OF_WORK_DAY);
                     }
                 }
