@@ -58,9 +58,10 @@ public class Manager extends Thread implements IManager {
         while (!isInterrupted()) {
             lock.lock();
             try {
-                while (callCenter.isQueueEmpty() || !operatorsRoom.isSameOperatorFree()) {
+                while ((callCenter.isQueueEmpty() || !operatorsRoom.isSameOperatorFree()) && !isInterrupted()) {
                     if (!condition.await(waitWithoutWork, TimeUnit.MILLISECONDS)) {
-                        throw new InterruptedException(END_OF_WORK_DAY);
+                        logger.info(END_OF_WORK_DAY);
+                        interrupt();
                     }
                 }
             } catch (InterruptedException e) {
@@ -69,7 +70,9 @@ public class Manager extends Thread implements IManager {
             } finally {
                 lock.unlock();
             }
-            createTask();
+            if (!isInterrupted()) {
+                createTask();
+            }
         }
     }
 

@@ -52,7 +52,7 @@ public class OperatorThread extends Thread {
                 logger.info(String.format(OPERATOR_ANSWERED_PERSON, call.getClient().getPerson().getName(), operator.getName()));
                 try {
                     while (call.isActive()) {
-                        condition.await(500, TimeUnit.MILLISECONDS);
+                        condition.await(50, TimeUnit.MILLISECONDS);
                     }
                     logger.info(String.format(CALL_ID_ENDED, call.getId() + ""));
                 } catch (InterruptedException e) {
